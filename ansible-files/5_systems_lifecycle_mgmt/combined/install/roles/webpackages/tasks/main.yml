@@ -1,0 +1,17 @@
+---
+#
+# Install webserver packages, ensure latest version
+
+  - name: Install Apache webserver or ensure latest version
+    apt: name={{ item }} state=latest
+    become: true
+    with_items:
+      - apache2
+#      - mod_ssl
+    notify: restart apache
+
+  - name: Ensure HTTPD is running
+    service:
+      name=apache2
+      state=started
+    become: true

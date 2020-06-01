@@ -1,0 +1,15 @@
+---
+
+- hosts: webservers
+  gather_facts: True
+  remote_user: root
+  tasks:
+    - name: Check Operating System
+      fail:
+        msg="You're not running a supported operating system (Debian) at the right version"
+      when:
+        - ansible_os_family != "Redhat" and ansible_distribution_major_version|int < 18
+
+    - name: Print Operating System
+      debug:  
+        msg="You're running {{ansible_os_family}} {{ansible_distribution_major_version}} or equivalent"

@@ -1,0 +1,31 @@
+##############
+## commands ##
+##############
+# connect to ansible vm and change directories
+multipass shell ubuntu-multipass-ansible
+cd ~/6_going_forward_extending_ansible_usage
+
+# commands to run
+# list ansible modules
+ansible-doc -l
+
+# query syntax and options for module
+ansible-doc --snippet shell
+ansible-doc -s shell
+
+# list local modules
+tree -d /usr/lib/python2.7/dist-packages/ansible/modules/
+
+ansible-galaxy search nagios
+
+# get info about a galaxy role
+ansible-galaxy info sadsfae.ansible-nagios
+
+# install a galaxy role
+ansible-galaxy install --roles-path . sadsfae.ansible-nagios
+
+# install from list of roles, put in current directory
+ansible-galaxy install -r requirements.yml --roles-path .
+
+# install from list of roles, by default go into ~/.ansible/roles/
+ansible-galaxy install -r requirements.yml

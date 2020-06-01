@@ -1,0 +1,15 @@
+---
+
+- hosts: webservers
+  gather_facts: True
+  remote_user: root
+  vars_files:
+     - all.yml
+  tasks:
+
+  - name: Install Package Dependencies
+    apt: name={{ item }} state=present
+    become: true
+    with_items:
+      - screen
+      - htop

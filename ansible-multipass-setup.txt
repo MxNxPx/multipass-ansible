@@ -1,0 +1,28 @@
+###########
+## setup ##
+###########
+# stand up vms
+bash multipass-setup-dest01.sh
+bash multipass-setup-dest02.sh
+bash multipass-setup-ansible.sh
+# verify vms are running and note the IPs
+multipass list
+
+# share ssh key from ansible vm (ubuntu user) to dest vms (root user)
+AUTH_KEY=$(multipass exec ubuntu-multipass-ansible -- bash -c "sudo cat ~/.ssh/id_rsa.pub")
+multipass exec ubuntu-multipass-dest01 -- bash -c "echo $AUTH_KEY | sudo tee -a /root/.ssh/authorized_keys"
+multipass exec ubuntu-multipass-dest02 -- bash -c "echo $AUTH_KEY | sudo tee -a /root/.ssh/authorized_keys"
+
+# copy code to ansible vm
+cd ansible-files
+multipass transfer hosts ubuntu-multipass-ansible:; for dir in $(find . ! -path . -type d); do multipass exec ubuntu-multipass-ansible -- bash -c "mkdir $dir"; for file in $(find $dir/ -maxdepth 1 -type f -exec basename '{}' \;); do echo "[*] Copying file $dir/$file ..."; multipass transfer $dir/$file ubuntu-multipass-ansible:$dir; done; done
+###########
+
+
+
+#############
+## cleanup ##
+#############
+# delete vms and purge data
+multipass delete ubuntu-multipass-ansible && multipass delete ubuntu-multipass-dest01 && multipass delete ubuntu-multipass-dest02 && multipass purge
+#############

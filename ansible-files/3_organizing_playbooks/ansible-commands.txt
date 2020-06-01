@@ -1,0 +1,26 @@
+##############
+## commands ##
+##############
+# connect to ansible vm, change directories, and copy hosts file
+multipass shell ubuntu-multipass-ansible
+cd ~/3_organizing_playbooks
+cp ~/hosts .
+
+# commands to run
+ansible-playbook -i hosts basic.yml
+
+ansible-playbook -i hosts basic.yml
+
+ssh ubuntu-multipass-dest01
+screen -ls
+screen -rx
+#detach from screen session
+#[CTRL]+a d
+
+ssh ubuntu-multipass-dest02
+screen -ls
+screen -rx
+#detach from screen session
+#[CTRL]+a d
+##############
+

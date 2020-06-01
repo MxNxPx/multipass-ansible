@@ -1,0 +1,29 @@
+##############
+## commands ##
+##############
+# connect to ansible vm
+multipass shell ubuntu-multipass-ansible
+
+# individual playbook
+# commands to run
+cd ~/5_systems_lifecycle_mgmt/individual_playbooks
+cp ~/hosts .
+
+ansible-playbook -i hosts user_keys.yml
+
+ansible-playbook -i hosts user_keys-BASH.yml
+# validate
+ssh exampleuser@ubuntu-multipass-dest01 "hostname"
+ssh exampleuser@ubuntu-multipass-dest02 "hostname"
+
+ansible-playbook -i hosts packages_httpdcontent.yml
+
+# combined playbooks
+cd ~/5_systems_lifecycle_mgmt/combined
+cp ~/hosts .
+
+ansible-playbook -i hosts --syntax-check install/webserver.yml
+
+ansible-playbook -i hosts install/webserver.yml
+##############
+

@@ -1,0 +1,27 @@
+##############
+## commands ##
+##############
+# connect to ansible vm, change directories, and copy hosts file
+multipass shell ubuntu-multipass-ansible
+cd ~/4_handlers_variables_conditional_logic
+cp ~/hosts .
+
+# commands to run
+ansible-playbook -i hosts update_httpd.yml
+
+ansible-playbook -i hosts conditionals_and_logic.yml
+
+ansible-playbook -i hosts firewall.yml
+# validate across dest servers
+for i in {1..2}; do host="ubuntu-multipass-dest0${i}"; echo "[*] HOST: $host"; ssh $host "cat /etc/iptables/rules.v4;echo;iptables -L"; echo;echo; done
+
+# or manually validate
+ssh ubuntu-multipass-dest01
+cat /etc/iptables/rules.v4
+iptables -L
+
+ssh ubuntu-multipass-dest01
+cat /etc/iptables/rules.v4
+iptables -L
+##############
+

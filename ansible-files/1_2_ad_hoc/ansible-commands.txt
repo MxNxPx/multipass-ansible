@@ -1,0 +1,35 @@
+##############
+## commands ##
+##############
+# connect to ansible vm, change directories, and copy hosts file
+multipass shell ubuntu-multipass-ansible
+cd ~/1_2_ad_hoc
+cp ~/hosts .
+
+# commands to run
+ansible -u root -i hosts webservers -m ping
+ansible all -m ping
+ansible webservers -a "uptime"
+ansible webservers -m shell -a 'for item in $(ls ~); do file $item; done'
+
+ansible webservers -m apt -a "name=apache2 state=latest"
+
+ansible webservers -m service -a "name=apache2 state=started"
+
+ansible webservers -a "systemctl status apache2"
+
+ansible webservers -m copy  -a "src=index.html dest=/var/www/html/index.html"
+##############
+
+
+##############
+## optional ##
+##############
+# after running the commands above, create report and push to a vm running apache
+multipass shell ubuntu-multipass-ansible
+cd ~
+mkdir out
+ansible -m setup --tree out/ all
+ansible-cmdb out/ > overview.html
+scp overview.html root@ubuntu-multipass-dest01:/var/www/html
+scp overview.html root@ubuntu-multipass-dest02:/var/www/html

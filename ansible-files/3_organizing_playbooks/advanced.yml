@@ -1,0 +1,35 @@
+---
+
+- hosts: webservers
+  gather_facts: True
+  remote_user: root
+  vars_files:
+     - all.yml
+  tasks:
+
+  - name: Install Package Dependencies
+    apt: name={{ item }} state=present
+    become: true
+    with_items:
+      - screen
+      - htop
+
+  - name: Check if already running
+    shell: ps -ef | grep -v grep | grep htop
+    ignore_errors: true
+    register: htop_is_running
+    no_log: true
+    become: true
+
+  - name: Remove dead screens
+    shell: screen -wipe
+    ignore_errors: true
+    become: true
+
+  - name: Report running status
+    debug:
+      msg="If I am 1 then I'm not running, I am {{ htop_is_running.rc }}"
+
+  - name: Start htop in a screen session
+    shell: screen -d -m bash -c '( htop )'
+    when: htop_is_running.rc == 1
